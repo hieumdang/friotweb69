@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<link rel="stylesheet" type="text/css" href="styles.css"/>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+     <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+
+</head>
+<body>
+
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDSySnLDhZXMA2E0hOIsFlB5E-dRf0zs-8",
+    authDomain: "friot-pie-chart.firebaseapp.com",
+    databaseURL: "https://friot-pie-chart.firebaseio.com",
+    projectId: "friot-pie-chart",
+    storageBucket: "friot-pie-chart.appspot.com",
+    messagingSenderId: "203350755826",
+    appId: "1:203350755826:web:91ad563b9a8b80c7e2036b",
+    measurementId: "G-CE0QZQJJVR"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
+
+
+<!--
+<button onClick="changeData()">Force Update</button>-->
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="Donut3D.js"></script>
+<script>
+
+var salesData=[
+	{label:"Basic", color:"#3366CC"},
+	{label:"Plus", color:"#DC3912"},
+	{label:"Lite", color:"#FF9900"},
+	{label:"Elite", color:"#109618"},
+	{label:"Delux", color:"#990099"}
+];
+
+var svg = d3.select("body").append("svg").attr("width",700).attr("height",300);
+
+svg.append("g").attr("id","salesDonut");
+
+Donut3D.draw("salesDonut", randomData(), 150, 150, 130, 100, 30, 0.4);
+function randomData(){
+	return salesData.map(function(d){ 
+		return {label:d.label, value:1000*Math.random(), color:d.color};});
+}
+// Update data 
+function rendering(){
+
+    var dataArray=  [{label : "Basic", value: 10, color: "#3366CC" },
+                   {label : "Plus", value: 10, color: "#DC3912"},
+                    {label : "Lite", value: 10, color: "#FF9900"},
+                    {label : "Elite", value: 10, color: "#109618"},
+                    {label : "Delux", value: 10, color: "#990099"}
+                    ];
+
+    var database = firebase.database();
+            var Ref = database.ref();
+            Ref.once('value', function(snapshot){
+                if(snapshot.exists()){
+                    var content = '';
+                    snapshot.forEach(function(data){
+                                        var val = data.val();
+                                        console.log(val.blue);
+                                        console.log(val.red);
+                                        console.log(val.green);
+                                        console.log(val.yellow);
+                                        console.log(val.cyan);
+                                   //     dataArray=[val.blue,val.red,val.green,val.yellow, val.cyan];
+                                
+                                        var mappedData = [
+                                        {label : "Basic", value: val.blue, color: "#3366CC" },
+                                        {label : "Plus", value: val.red, color: "#DC3912"},
+                                        {label : "Lite", value: val.green, color: "#FF9900"},
+                                        {label : "Elite", value: val.yellow, color: "#109618"},
+                                        {label : "Delux", value: val.cyan, color: "#990099"}
+                                        ];
+                                        this.dataArray = mappedData;
+                                        console.log("Mapped Data");
+                                        console.log(mappedData);
+                                        }
+                );
+            }
+            
+        });
+        console.log("Data Array");
+        console.log(this.dataArray);
+        Donut3D.transition("salesDonut", this.dataArray, 130, 100, 30, 0.4);
+}
+var run = setInterval("rendering()", 3000 );
+</script>
+</body>
+<!--
+function mapData() {
+    
+    var dataArray=  [{label : "Basic", value: 10, color: "#3366CC" },
+                   {label : "Plus", value: 10, color: "#DC3912"},
+                    {label : "Lite", value: 10, color: "#FF9900"},
+                    {label : "Elite", value: 10, color: "#109618"},
+                    {label : "Delux", value: 10, color: "#990099"}
+                    ];
+
+    var database = firebase.database();
+            var Ref = database.ref();
+            Ref.once('value', function(snapshot){
+                if(snapshot.exists()){
+                    var content = '';
+                    snapshot.forEach(function(data){
+                                        var val = data.val();
+                                        console.log(val.blue);
+                                        console.log(val.red);
+                                        console.log(val.green);
+                                        console.log(val.yellow);
+                                        console.log(val.cyan);
+                                   //     dataArray=[val.blue,val.red,val.green,val.yellow, val.cyan];
+                                
+                                        var mappedData = [
+                                        {label : "Basic", value: val.blue, color: "#3366CC" },
+                                        {label : "Plus", value: val.red, color: "#DC3912"},
+                                        {label : "Lite", value: val.green, color: "#FF9900"},
+                                        {label : "Elite", value: val.yellow, color: "#109618"},
+                                        {label : "Delux", value: val.cyan, color: "#990099"}
+                                        ];
+                                        this.dataArray = mappedData;
+                                        console.log("Mapped Data");
+                                        console.log(mappedData);
+                                        }
+                );
+            }
+            
+        });
+        console.log("Data Array");
+        console.log(this.dataArray);
+        return this.dataArray;
+}
+
+
+function randomData(){
+	return salesData.map(function(d){ 
+		return {label:d.label, value:1000*Math.random(), color:d.color};});
+}
+
+function updateData(){
+	Donut3D.transition("salesDonut", mapData(), 130, 100, 30, 0.4);
+}
+updateData();
+var run = setInterval("updateData();", 3000 );
+
+
+-->

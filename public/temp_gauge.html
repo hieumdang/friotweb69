@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://d3js.org/d3.v3.min.js" language="JavaScript"></script>
+    <script src="/scripts/liquidFillGauge.js" language="JavaScript"></script>
+    <style>
+        .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
+    </style>
+
+    <!-- Step 1 - Include the fusioncharts core library -->
+
+ <!-- The core Firebase JS SDK is always required and must be listed first -->
+ <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+ <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>   
+  
+
+</head>
+<body>
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyByh5Qq-w3iEgBgtDbHaVgCS-bLPLYoBlw",
+          authDomain: "thermo-7ac2f.firebaseapp.com",
+          databaseURL: "https://thermo-7ac2f.firebaseio.com",
+          projectId: "thermo-7ac2f",
+          storageBucket: "thermo-7ac2f.appspot.com",
+          messagingSenderId: "252783437470",
+          appId: "1:252783437470:web:e8969ad03c69f12d6b7d8f",
+          measurementId: "G-KGLGY4BHGN"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+      </script>
+    
+
+<svg id="fillgauge1" width="300px" height="300px"></svg>
+
+<script language="JavaScript">
+
+    var gauge2= loadLiquidFillGauge("fillgauge1", 28);
+    var config2 = liquidFillGaugeDefaultSettings();
+    config2.circleColor = "#D4AB6A";
+    config2.textColor = "#553300";
+    config2.waveTextColor = "#805615";
+    config2.waveColor = "#AA7D39";
+    config2.circleThickness = 0.1;
+    config2.circleFillGap = 0.2;
+    config2.textVertPosition = 0.8;
+    config2.waveAnimateTime = 20;
+    config2.waveHeight = 0.3;
+    config2.waveCount = 1;
+  
+    function getDataandRendering()
+    {
+        var database = firebase.database();
+            var Ref = database.ref();
+            Ref.once('value', function(snapshot){
+                if(snapshot.exists()){
+                    var content = '';
+                    snapshot.forEach(function(data){
+                                        var val = data.val();
+                                        T = val.temp;
+                                        console.log("temp=");
+                                             console.log(T);
+                                        d3.select('svg').select('fillgauge1').remove();
+                                        gauge2.update(T);
+                                        }
+                );
+            }
+            
+        });
+    }
+    getDataandRendering();
+    var run = setInterval( "getDataandRendering();", 2000 );
+</script>
+</body>
+</html>

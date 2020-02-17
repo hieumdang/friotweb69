@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://d3js.org/d3.v3.min.js" language="JavaScript"></script>
+    <script src="liquidFillGauge.js" language="JavaScript"></script>
+    <style>
+        .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
+    </style>
+
+    <!-- Step 1 - Include the fusioncharts core library -->
+
+ <!-- The core Firebase JS SDK is always required and must be listed first -->
+ <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-storage.js"></script>
+ <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>   
+  
+
+</head>
+<body>
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+    apiKey: "AIzaSyAbqTtHN4FSWYTS9vtlfG3eJY-nA4WkOr0",
+    authDomain: "friot-7325e.firebaseapp.com",
+    databaseURL: "https://friot-7325e.firebaseio.com",
+    projectId: "friot-7325e",
+    storageBucket: "friot-7325e.appspot.com",
+    messagingSenderId: "228141839557",
+    appId: "1:228141839557:web:fd1aefa5fffa44ac516cac",
+    measurementId: "G-ECF3X0NVHW"
+  };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+      </script>
+    Last Baddie
+    <img id="imageId" src="" alt="W3Schools.com" height="150px" width="150px" style="transform:rotate(270deg);">
+<script language="JavaScript">
+
+    var imageURL;
+    function getImage()
+    {
+        // Get a reference to the storage service, which is used to create references in your storage bucket
+        var storage = firebase.storage();
+
+        // Create a storage reference from our storage service
+        var storageRef = storage.ref();
+                // Create a reference to the file we want to download
+        var starsRef = storageRef.child('images/most-recent-bad.jpg');
+
+        // Get the download URL
+        starsRef.getDownloadURL().then(function(url) {
+            console.log("url=" + url);
+            imageURL = url;
+            console.log("imageURL=" + imageURL);
+            
+            document.getElementById("imageId").src = imageURL;
+            console.log("Image should be changed!");
+        // Insert url into an <img> tag to "download"
+        }).catch(function(error) {
+
+        // A full list of error codes is available at
+        // https://firebase.google.com/docs/storage/web/handle-errors
+        switch (error.code) {
+            case 'storage/object-not-found':
+            // File doesn't exist
+            break;
+
+            case 'storage/unauthorized':
+            // User doesn't have permission to access the object
+            break;
+
+            case 'storage/canceled':
+            // User canceled the upload
+            break;
+            case 'storage/unknown':
+            // Unknown error occurred, inspect the server response
+            break;
+        }
+        });
+
+       
+    }
+    getImage();
+    var run = setInterval( "getImage();",3000 );
+
+    console.log("hello");
+
+</script>
+
+</body>
+</html>
